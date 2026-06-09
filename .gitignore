@@ -1,0 +1,23 @@
+# Runtime data / secrets
+.env
+*.env
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+backend/uploads/
+backups/
+
+# Python / test cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+backend/.pytest_cache/
+backend/.venv/
+.venv/
+
+# OS/editor
+.DS_Store
+*.swp
+.vscode/
+.idea/

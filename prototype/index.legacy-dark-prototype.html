@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AS Survey Task System Prototype</title>
+  <style>
+    :root{
+      --bg:#09090b; --panel:#111216; --panel2:#171922; --card:#141720; --muted:#9ca3af; --text:#f4f4f5; --sub:#d1d5db;
+      --line:#2a2e3a; --accent:#7c3aed; --accent2:#22c55e; --warn:#f59e0b; --danger:#ef4444; --blue:#38bdf8;
+      --shadow: 0 24px 80px rgba(0,0,0,.45); --radius:18px; --radius2:12px;
+    }
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top left,#171132 0,#09090b 36%,#070708 100%);color:var(--text);font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;line-height:1.45}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.side{background:rgba(10,10,12,.82);border-right:1px solid var(--line);padding:24px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:grid;place-items:center;font-weight:800}.brand h1{font-size:15px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:2px 0 0}.nav button{width:100%;display:flex;align-items:center;gap:10px;border:1px solid transparent;background:transparent;color:var(--sub);padding:11px 12px;border-radius:12px;margin:4px 0;text-align:left}.nav button.active,.nav button:hover{background:#161824;border-color:#2e3342;color:#fff}.nav small{margin-left:auto;color:var(--muted)}
+    .main{padding:28px 34px 46px;max-width:1440px;width:100%;margin:0 auto}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.eyebrow{font-size:12px;color:#a78bfa;text-transform:uppercase;letter-spacing:.12em;font-weight:700}.title{font-size:28px;font-weight:750;margin:4px 0 2px;letter-spacing:-.03em}.desc{color:var(--muted);margin:0}.userchip{display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#11131a;color:var(--sub);font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 16px var(--accent2)}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}.step{border:1px solid var(--line);background:rgba(17,18,24,.72);border-radius:14px;padding:12px}.step b{display:block;font-size:13px}.step span{color:var(--muted);font-size:12px}.step.active{border-color:#8b5cf6;background:linear-gradient(180deg,rgba(124,58,237,.22),rgba(17,18,24,.8))}.step.done{border-color:rgba(34,197,94,.42)}
+    .screen{display:none}.screen.active{display:block}.grid{display:grid;gap:16px}.two{grid-template-columns:minmax(0,1.55fr) 380px}.three{grid-template-columns:repeat(3,1fr)}.panel{background:rgba(17,18,24,.9);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.panel .hd{padding:18px 18px 0}.panel .bd{padding:18px}.panel h2{font-size:17px;margin:0}.panel p.hint{color:var(--muted);font-size:13px;margin:4px 0 0}.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field select,.field input,.field textarea{width:100%;border:1px solid var(--line);background:#0d0f15;color:#f4f4f5;border-radius:12px;padding:11px 12px;outline:none}.field textarea{min-height:92px;resize:vertical}.field select:focus,.field input:focus,.field textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(124,58,237,.16)}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#171a24;color:#fff;border-radius:12px;padding:10px 13px;font-weight:650}.btn:hover{border-color:#4b5563}.btn.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);border-color:#7c3aed}.btn.green{background:linear-gradient(135deg,#16a34a,#059669);border-color:#22c55e}.btn.ghost{background:transparent}.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45);color:#fecaca}.btn.small{padding:7px 9px;border-radius:10px;font-size:12px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}.table th{color:var(--muted);font-weight:650;background:#10121a;position:sticky;top:0}.table tr:hover td{background:#121520}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 8px;font-size:12px;border:1px solid var(--line);color:var(--sub)}.badge.green{border-color:rgba(34,197,94,.4);color:#bbf7d0;background:rgba(34,197,94,.1)}.badge.warn{border-color:rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.1)}.badge.purple{border-color:rgba(124,58,237,.5);color:#ddd6fe;background:rgba(124,58,237,.14)}
+    .basket{position:sticky;top:24px}.metric{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:14px;padding:12px;background:#10121a;margin-bottom:9px}.metric strong{font-size:22px}.metric span{color:var(--muted);font-size:12px}.mini-list{display:grid;gap:8px}.mini{display:flex;justify-content:space-between;gap:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0d0f15}.mini small{color:var(--muted)}.selected-branch{display:flex;justify-content:space-between;gap:10px;padding:10px;border-bottom:1px solid var(--line)}.selected-branch:last-child{border-bottom:none}.selected-branch b{font-size:13px}.selected-branch small{color:var(--muted)}
+    .summary-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:#11141d}.summary-card .num{font-size:28px;font-weight:800;letter-spacing:-.04em}.summary-card .label{color:var(--muted);font-size:13px}.question{border:1px solid var(--line);background:#10131b;border-radius:16px;padding:15px;margin-bottom:12px}.question-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.question-title{font-weight:700}.toggle-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:var(--sub);font-size:13px}.toggle-row label{display:flex;gap:7px;align-items:center}.options{display:grid;gap:8px;margin-top:10px}.option{display:flex;gap:8px}.option input{flex:1;border:1px solid var(--line);background:#0d0f15;color:#fff;border-radius:10px;padding:9px}.progressbar{height:10px;background:#242834;border-radius:999px;overflow:hidden}.progressbar div{height:100%;background:linear-gradient(90deg,#22c55e,#38bdf8);border-radius:999px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{border:1px solid var(--line);background:#11141d;color:var(--sub);border-radius:999px;padding:8px 12px}.tab.active{background:#26223a;color:#fff;border-color:#7c3aed}.notice{padding:12px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.1);color:#fde68a;border-radius:12px;font-size:13px}.toast{position:fixed;right:24px;bottom:24px;background:#121622;border:1px solid #354057;color:#fff;border-radius:14px;padding:13px 15px;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);transition:.22s}.toast.show{opacity:1;transform:translateY(0)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}.modal.show{display:flex}.modal-card{width:min(560px,100%);background:#11131a;border:1px solid #374151;border-radius:20px;box-shadow:var(--shadow);padding:20px}.modal-card h3{margin:0 0 8px}.modal-card p{color:var(--muted)}
+    .as-mode .steps{display:none}.as-mode .userchip{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08)}
+    .survey-card{--accent:#8b5cf6;--accent-soft:rgba(139,92,246,.12);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));background:linear-gradient(180deg,var(--accent-soft),rgba(14,17,24,.94));border-radius:18px;margin-bottom:16px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.22), inset 5px 0 0 var(--accent)}.survey-card.completed{--accent:#22c55e;--accent-soft:rgba(34,197,94,.08);opacity:.84;background:linear-gradient(180deg,var(--accent-soft),#0d1016)}.survey-card.overdue-card{--accent:#f59e0b;--accent-soft:rgba(245,158,11,.12)}.survey-card-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:16px 16px 12px 20px;border-bottom:1px solid color-mix(in srgb,var(--accent) 30%,var(--line))}.survey-title{font-size:18px;font-weight:900;letter-spacing:-.02em;color:#fff;display:flex;align-items:center;gap:10px}.survey-title:before{content:"";width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}.survey-meta{color:#e2e8f0;font-size:12px;margin-top:6px}.survey-card small{color:#d1d5db}.survey-stats .badge{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:color-mix(in srgb,var(--accent) 15%,#11141d)}.survey-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.task-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 16px 12px 20px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.08)}.task-row:last-child{border-bottom:0}.task-row.submitted{background:rgba(34,197,94,.06);color:#a7f3d0}.task-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.completed-divider{margin:22px 0 12px;color:#86efac;font-size:12px;text-transform:uppercase;letter-spacing:.14em;border-top:1px solid rgba(34,197,94,.25);padding-top:14px}
+    .as-form-panel{--accent:#8b5cf6;--accent-soft:#8b5cf622;border-color:color-mix(in srgb,var(--accent) 45%,var(--line));overflow:hidden}.as-form-panel .hd{padding:0}.as-form-banner{padding:18px 20px;border-bottom:1px solid color-mix(in srgb,var(--accent) 36%,var(--line));background:linear-gradient(135deg,var(--accent-soft),rgba(14,17,24,.94))}.as-form-title{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:900;letter-spacing:-.02em}.as-form-title:before{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px var(--accent-soft),0 0 24px var(--accent)}.as-form-meta{color:#e2e8f0;margin:7px 0 0;font-size:13px}.as-question{--q-accent:var(--accent);--q-soft:var(--accent-soft);border-color:color-mix(in srgb,var(--q-accent) 38%,var(--line));background:linear-gradient(180deg,var(--q-soft),#10131b);box-shadow:inset 4px 0 0 var(--q-accent)}.as-question .question-title{display:flex;align-items:center;gap:10px}.as-question .q-no{width:30px;height:30px;border-radius:10px;display:inline-grid;place-items:center;background:var(--q-accent);color:#050507;font-weight:900;box-shadow:0 0 0 5px var(--q-soft)}
+    .builder-panel{--builder-accent:#a78bfa;--builder-soft:#a78bfa22;border-color:color-mix(in srgb,var(--builder-accent) 42%,var(--line));overflow:hidden}.builder-panel .hd{padding:0}.builder-hero{padding:18px 20px 16px;background:linear-gradient(135deg,var(--builder-soft),rgba(14,17,24,.95));border-bottom:1px solid color-mix(in srgb,var(--builder-accent) 35%,var(--line))}.builder-hero h2{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:900}.builder-hero h2:before{content:"QB";width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#a78bfa,#38bdf8);color:#050507;font-size:12px;font-weight:950;box-shadow:0 0 0 6px var(--builder-soft)}.builder-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.builder-tab{border:1px solid color-mix(in srgb,var(--tab-color) 45%,var(--line));background:linear-gradient(180deg,color-mix(in srgb,var(--tab-color) 18%,#11141d),#10131b);color:#f8fafc;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}.builder-tab span{color:#d1d5db;font-weight:650;margin-left:4px}.admin-question{--q-accent:#a78bfa;--q-soft:#a78bfa22;border-color:color-mix(in srgb,var(--q-accent) 42%,var(--line));background:linear-gradient(180deg,var(--q-soft),#10131b);box-shadow:inset 5px 0 0 var(--q-accent)}.admin-question .question-head{padding-bottom:12px;border-bottom:1px solid color-mix(in srgb,var(--q-accent) 25%,var(--line))}.admin-question .question-title{display:flex;align-items:center;gap:10px;font-size:16px}.admin-question .q-no{width:32px;height:32px;border-radius:11px;display:inline-grid;place-items:center;background:var(--q-accent);color:#050507;font-weight:950;box-shadow:0 0 0 5px var(--q-soft)}.admin-question .q-type-chip{border-color:color-mix(in srgb,var(--q-accent) 50%,var(--line));background:color-mix(in srgb,var(--q-accent) 16%,#11141d);color:#fff}.answer-config{border:1px dashed color-mix(in srgb,var(--q-accent, #8b5cf6) 34%,var(--line));background:rgba(0,0,0,.12);border-radius:14px;padding:12px;margin-top:12px}.answer-config input:disabled,.answer-config textarea:disabled{color:#e5e7eb;background:#151923;border-color:color-mix(in srgb,var(--q-accent, #8b5cf6) 28%,var(--line));opacity:1}.admin-question .toggle-row{padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.06)}.preview-panel{border-color:rgba(34,197,94,.34);overflow:hidden}.preview-panel .hd{background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(56,189,248,.06));padding-bottom:14px;border-bottom:1px solid rgba(34,197,94,.22)}
+    .deadline-card{border:1px solid rgba(245,158,11,.42);background:linear-gradient(135deg,rgba(245,158,11,.14),rgba(124,58,237,.08));border-radius:16px;padding:14px;margin:12px 0}.deadline-card label{display:block;color:#fde68a;font-weight:850;font-size:13px;margin-bottom:8px}.deadline-card input{width:100%;border:1px solid rgba(245,158,11,.45);background:#11131a;color:#fff;border-radius:12px;padding:11px 12px;outline:none}.deadline-card input:focus{box-shadow:0 0 0 3px rgba(245,158,11,.18)}.deadline-hint{color:#fef3c7;font-size:12px;margin-top:8px}.due-badge{border-color:rgba(245,158,11,.55)!important;color:#fde68a!important;background:rgba(245,158,11,.16)!important;font-weight:850}.deadline-strip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(245,158,11,.5);background:rgba(245,158,11,.13);color:#fde68a;border-radius:999px;padding:6px 10px;margin-top:8px;font-size:12px;font-weight:850}
+    @media(max-width:1050px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.two,.three,.filters{grid-template-columns:1fr}.basket{position:relative;top:0}.steps{grid-template-columns:1fr 1fr}.main{padding:22px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">AS</div><div><h1>Survey Task System</h1><p>Admin + AS Prototype</p></div></div>
+    <nav class="nav">
+      <button class="active" data-screen="select">① เลือกสาขา <small>Basket</small></button>
+      <button data-screen="review">② ตรวจสอบ <small>Confirm</small></button>
+      <button data-screen="questions">③ ตั้งคำถาม <small>Builder</small></button>
+      <button data-screen="progress">④ ความคืบหน้า <small>Progress</small></button>
+      <button data-screen="as-login">⑤ AS User Flow <small>Login / Tasks / Form</small></button>
+    </nav>
+    <div class="notice" style="margin-top:22px">Prototype รวม 2 ฝั่ง: Admin สร้าง/ติดตาม survey และ AS login เพื่อตอบงานรายสาขา</div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="eyebrow" id="topEyebrow">MVP Prototype</div><div class="title" id="topTitle">สร้าง Survey: ตรวจราคา Competitor AC</div><p class="desc" id="topDesc">Due date: 20 Jan · Status: Draft</p></div>
+      <div class="userchip" id="userChip"><span class="dot"></span> <span id="userLabel">Super Admin · Armz</span></div>
+    </div>
+    <div class="steps">
+      <div class="step done"><b>1. Survey Info</b><span>ตั้งชื่อ + due date</span></div>
+      <div class="step active" id="step-select"><b>2. Select Branches</b><span>เลือกสาขาแบบ basket</span></div>
+      <div class="step" id="step-review"><b>3. Confirm</b><span>ตรวจสอบก่อนตั้งคำถาม</span></div>
+      <div class="step" id="step-questions"><b>4. Questions</b><span>สร้างคำถาม + รูปภาพ</span></div>
+      <div class="step" id="step-publish"><b>5. Publish / Progress</b><span>สร้าง task และติดตามผล</span></div>
+    </div>
+
+    <section id="select" class="screen active">
+      <div class="grid two">
+        <div class="panel">
+          <div class="hd"><h2>เลือกสาขา</h2><p class="hint">เลือก Account → Region → AS Code แล้วเลือกสาขา กดบันทึกเพื่อสะสมเข้า basket จากนั้นเปลี่ยน filter เพื่อเลือกเพิ่มได้</p></div>
+          <div class="bd">
+            <div class="filters">
+              <div class="field"><label>Account</label><select id="account"><option>HomePro</option><option>PowerBuy</option><option>Thai Watsadu</option></select></div>
+              <div class="field"><label>Region</label><select id="region"><option>Bangkok</option><option>Central</option><option>Northeast</option><option>South</option></select></div>
+              <div class="field"><label>AS Code</label><select id="ascode"><option>BKK01</option><option>BKK02</option><option>CEN01</option><option>NE01</option><option>STH01</option></select></div>
+              <div class="field"><label>Search Branch</label><input id="search" placeholder="ค้นหาสาขา" /></div>
+            </div>
+            <div class="actions" style="margin-bottom:14px">
+              <button class="btn small" id="selectVisible">Select visible</button>
+              <button class="btn small ghost" id="clearVisible">Clear visible</button>
+              <button class="btn primary" id="saveCurrent">บันทึกสาขาชุดนี้เข้า Basket</button>
+            </div>
+            <div style="max-height:470px;overflow:auto;border:1px solid var(--line);border-radius:14px">
+              <table class="table"><thead><tr><th><input type="checkbox" id="checkAll"></th><th>Branch</th><th>Account</th><th>Region</th><th>AS</th><th>Status</th></tr></thead><tbody id="branchRows"></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div class="panel basket">
+          <div class="hd"><h2>Selected Branch Basket</h2><p class="hint">สาขาที่เลือกจะไม่หายเมื่อเปลี่ยน filter</p></div>
+          <div class="bd">
+            <div class="metric"><div><span>Total selected</span><strong id="totalSelected">0</strong></div><span class="badge purple">Draft saved</span></div>
+            <div class="grid" style="gap:10px;margin:12px 0" id="basketSummary"></div>
+            <div style="max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:14px;margin-bottom:14px;scrollbar-gutter:stable" id="selectedList"></div>
+            <div class="actions" style="margin-top:14px">
+              <button class="btn danger" id="clearBasket">Clear all</button>
+              <button class="btn green" data-goto="review">Review selected branches</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="review" class="screen">
+      <div class="grid three" style="margin-bottom:16px">
+        <div class="summary-card"><div class="num" id="rTotal">0</div><div class="label">Total selected branches</div></div>
+        <div class="summary-card"><div class="num" id="rRegions">0</div><div class="label">Regions</div></div>
+        <div class="summary-card"><div class="num" id="rAS">0</div><div class="label">AS Codes</div></div>
+      </div>
+      <div class="panel"><div class="hd"><h2>Review Selected Branches</h2><p class="hint">ตรวจสอบว่าสาขาทั้งหมดถูกต้องก่อนยืนยันและไปตั้งคำถาม</p></div><div class="bd">
+        <div class="actions" style="margin-bottom:14px"><button class="btn ghost" data-goto="select">Back to edit selection</button><button class="btn green" id="confirmBranches">Confirm branch selection</button></div>
+        <div style="max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:14px"><table class="table"><thead><tr><th>Account</th><th>Region</th><th>AS Code</th><th>Branch Code</th><th>Branch Name</th><th>Action</th></tr></thead><tbody id="reviewRows"></tbody></table></div>
+      </div></div>
+    </section>
+
+    <section id="questions" class="screen">
+      <div class="grid two">
+        <div class="panel builder-panel"><div class="hd"><div class="builder-hero"><h2>Question Builder</h2><p class="hint">ตั้งคำถาม เลือกชนิดคำตอบ และกำหนดว่าจะให้แนบรูปหรือไม่ในแต่ละคำถาม</p><div class="builder-tabs"><span class="builder-tab" style="--tab-color:#38bdf8">1. Question <span>ข้อความ</span></span><span class="builder-tab" style="--tab-color:#a78bfa">2. Answer Type <span>รูปแบบคำตอบ</span></span><span class="builder-tab" style="--tab-color:#f59e0b">3. Photo Rule <span>รูปภาพ</span></span><span class="builder-tab" style="--tab-color:#22c55e">4. Required <span>บังคับตอบ</span></span></div></div></div><div class="bd">
+          <div id="questionsList"></div>
+          <button class="btn primary" id="addQuestion">+ Add question</button>
+        </div></div>
+        <div class="panel basket preview-panel"><div class="hd"><h2>Publish Preview</h2><p class="hint">ตรวจภาพรวมก่อน publish</p></div><div class="bd">
+          <div class="metric"><div><span>Selected branches</span><strong id="pBranches">0</strong></div><span class="badge green">Confirmed</span></div>
+          <div class="metric"><div><span>Questions</span><strong id="pQuestions">0</strong></div><span class="badge purple">Draft</span></div>
+          <div class="deadline-card"><label>Survey deadline / กำหนดส่งงาน AS</label><input id="surveyDeadline" type="date" value="2026-01-20"><div class="deadline-hint" id="deadlinePreview">AS ต้องส่งภายใน 20 Jan</div></div>
+          <div class="notice">เมื่อกด Publish ระบบจะสร้าง task รายสาขาตาม branch basket ที่ confirm แล้วเท่านั้น</div>
+          <div class="actions" style="margin-top:14px"><button class="btn ghost" data-goto="review">Back</button><button class="btn green" id="publishBtn">Preview & Publish</button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section id="progress" class="screen">
+      <div class="grid three" style="margin-bottom:16px">
+        <div class="summary-card"><div class="num" id="dashActive">3</div><div class="label">Active surveys</div></div>
+        <div class="summary-card"><div class="num" id="dashPending">49</div><div class="label">Total pending branches</div></div>
+        <div class="summary-card"><div class="num" id="dashAvg">58%</div><div class="label">Average completion</div></div>
+      </div>
+      <div class="panel" style="margin-bottom:16px"><div class="hd"><h2>Survey Progress Dashboard</h2><p class="hint">หลาย survey พร้อมกันจะแสดงแยกเป็นแต่ละรายการ กด View detail เพื่อดู AS ที่ยังไม่สำเร็จ</p></div><div class="bd">
+        <div style="overflow:auto;border:1px solid var(--line);border-radius:14px"><table class="table"><thead><tr><th>Survey</th><th>Due</th><th>Assigned</th><th>Submitted</th><th>Pending</th><th>Completion</th><th>Status</th><th>Actions</th></tr></thead><tbody id="surveyProgressRows"></tbody></table></div>
+      </div></div>
+      <div class="panel"><div class="hd"><h2 id="detailTitle">Survey Detail: ตรวจราคา Competitor AC</h2><p class="hint">Breakdown by AS สำหรับ survey ที่เลือก</p></div><div class="bd">
+        <div class="progressbar" style="margin-bottom:12px"><div id="detailBar" style="width:70%"></div></div>
+        <div class="tabs"><button class="tab active">By AS</button><button class="tab">Pending Branches</button><button class="tab">Responses</button><button class="tab">Export Excel</button></div>
+        <table class="table"><thead><tr><th>AS Code</th><th>AS Name</th><th>Assigned</th><th>Submitted</th><th>Pending</th><th>Completion</th><th>Status</th></tr></thead><tbody id="detailRows"></tbody></table>
+      </div></div>
+    </section>
+
+
+    <section id="as-login" class="screen">
+      <div class="panel" style="max-width:680px;margin:auto"><div class="hd"><h2>AS Login</h2><p class="hint">ตัวอย่างฝั่ง AS: login ด้วย AS Code + PIN เพื่อเห็นเฉพาะงานที่ถูก assign</p></div><div class="bd">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field"><label>AS Code</label><input id="asLoginCode" value="BKK01" placeholder="เช่น BKK01"></div>
+          <div class="field"><label>PIN</label><input id="asLoginPin" type="password" value="123456" placeholder="PIN 4-6 หลัก"></div>
+        </div>
+        <div class="notice" style="margin-top:14px">Prototype note: ทดลองได้ด้วย BKK01 / 123456 หรือ BKK02 / 222222 · ระบบจริงควร hash PIN, lock เมื่อใส่ผิดหลายครั้ง และบันทึก submitted_by ทุกครั้ง</div>
+        <div class="actions" style="margin-top:16px"><button class="btn primary" id="asLoginBtn">Login as AS</button></div>
+      </div></div>
+    </section>
+
+    <section id="as-tasks" class="screen">
+      <div class="grid three" style="margin-bottom:16px">
+        <div class="summary-card"><div class="num" id="asPendingCount">0</div><div class="label">Pending branch tasks</div></div>
+        <div class="summary-card"><div class="num" id="asCompletedCount">0</div><div class="label">Completed tasks</div></div>
+        <div class="summary-card"><div class="num" id="asOverdueCount">0</div><div class="label">Overdue</div></div>
+      </div>
+      <div class="panel"><div class="hd"><h2 id="asTaskTitle">My Tasks · AS BKK01</h2><p class="hint" id="asTaskHint">AS เห็นงานใหม่/งานค้าง แยกตาม survey และสาขาที่ตัวเองถูก assign เท่านั้น</p></div><div class="bd" id="asTaskList"></div></div>
+    </section>
+
+    <section id="as-form" class="screen">
+      <div class="panel as-form-panel" id="asFormPanel"><div class="hd"><div class="as-form-banner"><div class="as-form-title" id="asFormTitle">ตอบ Survey</div><p class="as-form-meta" id="asFormMeta">Account / Branch / Due date</p></div></div><div class="bd">
+        <div class="notice" style="margin-bottom:14px">คำตอบนี้เป็นรายสาขา เมื่อ submit แล้ว task ของสาขานี้จะเปลี่ยนเป็น Submitted</div>
+        <div class="question as-question" data-q="1"><div class="question-title"><span class="q-no">1</span><span>ราคาโปรโมชัน competitor รุ่นหลักคือเท่าไหร่?</span> <span class="badge warn">Required</span></div><div class="field" style="margin-top:10px"><input type="number" placeholder="กรอกราคา เช่น 18990 บาท"></div></div>
+        <div class="question as-question" data-q="2"><div class="question-title"><span class="q-no">2</span><span>มี display competitor หรือไม่?</span></div><div style="display:flex;gap:14px;margin-top:10px"><label><input type="radio" name="display"> มี</label><label><input type="radio" name="display"> ไม่มี</label><label><input type="radio" name="display"> อื่น ๆ</label></div></div>
+        <div class="question as-question" data-q="3"><div class="question-title"><span class="q-no">3</span><span>แนบรูป display หรือป้ายราคา</span> <span class="badge warn">Photo required</span></div><div class="field" style="margin-top:10px"><input type="file" accept="image/*"></div><p class="hint">รองรับ JPG/PNG · ระบบจริงควรมี preview และจำกัดขนาดไฟล์</p></div>
+        <div class="actions" style="margin-top:16px"><button class="btn ghost" data-goto="as-tasks">Back to tasks</button><button class="btn green" id="asSubmitBtn">Submit branch response</button></div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="deleteModal">
+  <div class="modal-card">
+    <h3>ยืนยันการลบ Survey</h3>
+    <p id="deleteWarning">การลบจะซ่อน survey นี้จาก dashboard แม้งานยังไม่ complete</p>
+    <div class="notice" style="margin:12px 0">ควรใช้เฉพาะกรณีสร้าง survey ผิด หรือไม่ต้องการใช้งานต่อแล้ว ระบบจริงควรเก็บ audit log และ soft-delete ก่อน</div>
+    <div class="field"><label>Admin password เพื่อยืนยัน</label><input id="deletePassword" type="password" placeholder="พิมพ์รหัสผ่าน admin" oninput="document.querySelector('#confirmDeleteBtn').disabled=!this.value.trim()"></div>
+    <div class="actions" style="margin-top:14px"><button class="btn ghost" onclick="closeDeleteModal()">Cancel</button><button class="btn danger" id="confirmDeleteBtn" onclick="confirmDeleteSurvey()" disabled>ลบ Survey ถาวร</button></div>
+  </div>
+</div>
+<script>
+const branches = [
+  ['HP-BKK-001','HomePro Rama 2','HomePro','Bangkok','BKK01'],['HP-BKK-002','HomePro Bangna','HomePro','Bangkok','BKK01'],['HP-BKK-003','HomePro Pinklao','HomePro','Bangkok','BKK01'],['HP-BKK-004','HomePro Ratchada','HomePro','Bangkok','BKK02'],['HP-BKK-005','HomePro Mega Bangna','HomePro','Bangkok','BKK02'],
+  ['HP-CEN-001','HomePro Ayutthaya','HomePro','Central','CEN01'],['HP-CEN-002','HomePro Rangsit','HomePro','Central','CEN01'],['HP-CEN-003','HomePro Saraburi','HomePro','Central','CEN01'],
+  ['PB-BKK-001','PowerBuy CentralWorld','PowerBuy','Bangkok','BKK01'],['PB-BKK-002','PowerBuy Rama 9','PowerBuy','Bangkok','BKK02'],['PB-NE-001','PowerBuy Khon Kaen','PowerBuy','Northeast','NE01'],
+  ['TW-STH-001','Thai Watsadu Phuket','Thai Watsadu','South','STH01'],['TW-STH-002','Thai Watsadu Surat','Thai Watsadu','South','STH01'],['TW-NE-001','Thai Watsadu Korat','Thai Watsadu','Northeast','NE01']
+].map((b,i)=>({id:i+1,code:b[0],name:b[1],account:b[2],region:b[3],as:b[4]}));
+let surveys = [
+  {id:1,title:'ตรวจราคา Competitor AC',due:'20 Jan',assigned:40,submitted:28,pending:12,status:'Active'},
+  {id:2,title:'ตรวจ Display REF',due:'22 Jan',assigned:65,submitted:50,pending:15,status:'Active'},
+  {id:3,title:'เช็ค Stock WM',due:'25 Jan',assigned:30,submitted:8,pending:22,status:'Active'}
+];
+let activeSurveyId = 1;
+let pendingDeleteSurveyId = null;
+let selected = new Map();
+const asUsers = [
+  {code:'BKK01', name:'Somchai', pin:'123456'},
+  {code:'BKK02', name:'Narin', pin:'222222'},
+  {code:'CEN01', name:'May', pin:'333333'},
+  {code:'NE01', name:'Krit', pin:'444444'},
+  {code:'STH01', name:'Fon', pin:'555555'}
+];
+let currentAS = asUsers[0];
+let currentDraftDeadline = '2026-01-20';
+let questions = [
+  {text:'ราคาโปรโมชัน competitor รุ่นหลักคือเท่าไหร่?', type:'number', required:true, allowPhoto:false, photoRequired:false, options:[]},
+  {text:'แนบรูป display หรือป้ายราคา', type:'photo', required:true, allowPhoto:true, photoRequired:true, options:[]}
+];
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function formatDeadline(value){
+  if(!value) return 'ยังไม่กำหนด';
+  const d=new Date(value+'T00:00:00');
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+}
+function updateDeadline(value){
+  currentDraftDeadline=value || currentDraftDeadline;
+  const label=formatDeadline(currentDraftDeadline);
+  $('#deadlinePreview').textContent=`AS ต้องส่งภายใน ${label}`;
+  $('#topDesc').textContent=`Due date: ${label} · Status: Draft`;
+}
+function currentRows(){const a=$('#account').value,r=$('#region').value,as=$('#ascode').value,s=$('#search').value.toLowerCase();return branches.filter(b=>b.account===a&&b.region===r&&b.as===as&&(b.code.toLowerCase().includes(s)||b.name.toLowerCase().includes(s)))}
+function renderBranches(){const rows=currentRows();$('#branchRows').innerHTML=rows.map(b=>`<tr><td><input type="checkbox" class="branchCheck" data-id="${b.id}" ${selected.has(b.id)?'checked':''}></td><td><b>${b.code}</b><br><span style="color:var(--muted)">${b.name}</span></td><td>${b.account}</td><td>${b.region}</td><td><span class="badge purple">${b.as}</span></td><td>${selected.has(b.id)?'<span class="badge green">In basket</span>':'<span class="badge">Available</span>'}</td></tr>`).join('') || `<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:32px">ไม่พบสาขาตาม filter นี้</td></tr>`}
+function renderBasket(){const arr=[...selected.values()];$('#totalSelected').textContent=arr.length;$('#pBranches').textContent=arr.length;$('#rTotal').textContent=arr.length;$('#rRegions').textContent=new Set(arr.map(b=>b.region)).size;$('#rAS').textContent=new Set(arr.map(b=>b.as)).size;
+ const byAs={}; arr.forEach(b=>byAs[b.as]=(byAs[b.as]||0)+1); $('#basketSummary').innerHTML=Object.entries(byAs).map(([k,v])=>`<div class="mini"><div><b>${k}</b><br><small>AS Code</small></div><strong>${v}</strong></div>`).join('') || '<p class="hint">ยังไม่มีสาขาที่เลือก</p>';
+ $('#selectedList').innerHTML=arr.map(b=>`<div class="selected-branch"><div><b>${b.code}</b><br><small>${b.name} · ${b.region} · ${b.as}</small></div><button class="btn small danger remove" data-id="${b.id}">Remove</button></div>`).join('') || '<div style="padding:18px;color:var(--muted);text-align:center">Basket ว่าง</div>';
+ $('#reviewRows').innerHTML=arr.map(b=>`<tr><td>${b.account}</td><td>${b.region}</td><td><span class="badge purple">${b.as}</span></td><td>${b.code}</td><td>${b.name}</td><td><button class="btn small danger remove" data-id="${b.id}">Remove</button></td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px">ยังไม่มีสาขา</td></tr>';
+ $$('.remove').forEach(btn=>btn.onclick=()=>{selected.delete(+btn.dataset.id);renderAll()});}
+function questionAnswerConfig(q, idx){
+  if(q.type==='single_choice' || q.type==='multiple_choice'){
+    const control = q.type==='single_choice' ? 'radio' : 'checkbox';
+    const label = q.type==='single_choice' ? 'AS จะเลือกได้ 1 คำตอบ' : 'AS จะเลือกได้หลายคำตอบ';
+    const opts = (q.options && q.options.length ? q.options : ['ตัวเลือก 1','ตัวเลือก 2']);
+    return `<div class="answer-config" style="margin-top:12px"><div class="field"><label>Answer options</label><div class="hint" style="margin:0 0 10px">Admin เพิ่ม/แก้/ลบตัวเลือกได้ตรงนี้ · ${label}</div></div><div class="options">${opts.map((op,j)=>`<div class="option"><input value="${op}" placeholder="พิมพ์ตัวเลือกคำตอบ" oninput="updateOption(${idx},${j},this.value)"><button class="btn small" onclick="removeOption(${idx},${j})" type="button">Remove</button></div>`).join('')}<button class="btn small primary" onclick="addOption(${idx})" type="button">+ Add answer option</button></div><div class="hint" style="margin-top:12px">AS-side preview: ${opts.map(op=>`<label style='margin-right:12px'><input type='${control}' disabled> ${op}</label>`).join('')}</div></div>`;
+  }
+  if(q.type==='short_text') return `<div class="answer-config"><div class="field"><label>AS answer preview</label><input placeholder="AS จะกรอกคำตอบสั้น ๆ เช่น ราคา / รุ่น / หมายเหตุ" disabled></div></div>`;
+  if(q.type==='long_text') return `<div class="answer-config"><div class="field"><label>AS answer preview</label><textarea placeholder="AS จะกรอกรายละเอียดเพิ่มเติม" disabled></textarea></div></div>`;
+  if(q.type==='number') return `<div class="answer-config"><div class="field"><label>AS answer preview</label><input type="number" placeholder="AS จะกรอกตัวเลข เช่น ราคา" disabled></div></div>`;
+  if(q.type==='photo') return `<div class="answer-config"><div class="field"><label>AS answer preview</label><input type="file" accept="image/*" disabled></div><div class="hint" style="margin-top:8px">คำถามชนิด Photo จะเปิด photo upload และบังคับแนบรูปตาม setting ด้านล่าง</div></div>`;
+  return '';
+}
+const adminQuestionPalette=['#38bdf8','#a78bfa','#f97316','#14b8a6','#ec4899','#eab308'];
+const answerTypeLabels={short_text:'Short text',long_text:'Long text',number:'Number',single_choice:'Single choice',multiple_choice:'Multiple choice',photo:'Photo upload'};
+function renderQuestions(){let html=''; questions.forEach((q,idx)=>{const i=idx+1, color=adminQuestionPalette[idx%adminQuestionPalette.length]; html+=`<div class="question admin-question" style="--q-accent:${color};--q-soft:${color}22"><div class="question-head"><div><div class="question-title"><span class="q-no">${i}</span><span>Question ${i}</span><span class="badge q-type-chip">${answerTypeLabels[q.type]||q.type}</span>${q.required?'<span class="badge warn">Required</span>':''}${q.photoRequired?'<span class="badge warn">Photo</span>':''}</div><p class="hint">กำหนดคำถาม ชนิดคำตอบ และตัวอย่างช่องที่ AS จะเห็น</p></div><button class="btn small danger" onclick="removeQuestion(${idx})" type="button">Remove</button></div><div class="grid" style="grid-template-columns:1.4fr .8fr;gap:10px"><div class="field"><label>Question text</label><input value="${q.text}" oninput="updateQuestion(${idx},'text',this.value)"></div><div class="field"><label>Answer type</label><select onchange="updateQuestionType(${idx},this.value)"><option value="short_text" ${q.type==='short_text'?'selected':''}>Short text</option><option value="long_text" ${q.type==='long_text'?'selected':''}>Long text</option><option value="number" ${q.type==='number'?'selected':''}>Number</option><option value="single_choice" ${q.type==='single_choice'?'selected':''}>Single choice</option><option value="multiple_choice" ${q.type==='multiple_choice'?'selected':''}>Multiple choice</option><option value="photo" ${q.type==='photo'?'selected':''}>Photo upload</option></select></div></div>${questionAnswerConfig(q,idx)}<div class="toggle-row"><label><input type="checkbox" ${q.required?'checked':''} onchange="updateQuestion(${idx},'required',this.checked)"> Required answer</label><label><input type="checkbox" ${q.allowPhoto?'checked':''} onchange="updateQuestion(${idx},'allowPhoto',this.checked)"> Allow photo attachment</label><label><input type="checkbox" ${q.photoRequired?'checked':''} onchange="updateQuestion(${idx},'photoRequired',this.checked)"> Photo required</label></div></div>`});
+ $('#questionsList').innerHTML=html; $('#pQuestions').textContent=questions.length;}
+function updateQuestion(idx,key,value){
+  questions[idx][key]=value;
+  // Do not re-render while typing text fields; it resets focus/cursor and makes continuous typing impossible.
+  if(key==='text') return;
+  if(key==='photoRequired' && value) questions[idx].allowPhoto=true;
+  renderQuestions();
+}
+function updateQuestionType(idx,type){questions[idx].type=type; if(type==='single_choice'||type==='multiple_choice'){questions[idx].options=['มี','ไม่มี','อื่น ๆ'];} else {questions[idx].options=[];} if(type==='photo'){questions[idx].allowPhoto=true; questions[idx].photoRequired=true;} renderQuestions()}
+function addOption(idx){questions[idx].options.push(`ตัวเลือก ${questions[idx].options.length+1}`); renderQuestions()}
+function removeOption(idx,optIdx){questions[idx].options.splice(optIdx,1); renderQuestions()}
+function updateOption(idx,optIdx,value){questions[idx].options[optIdx]=value}
+window.removeQuestion=(idx)=>{questions.splice(idx,1); if(!questions.length){questions.push({text:'',type:'short_text',required:true,allowPhoto:false,photoRequired:false,options:[]})} renderQuestions()}
+const asTasks = [
+  {survey:'ตรวจราคา Competitor AC',account:'HomePro',branch:'HomePro Rama 2',code:'HP-BKK-001',as:'BKK01',due:'20 Jan',status:'New'},
+  {survey:'ตรวจราคา Competitor AC',account:'HomePro',branch:'HomePro Bangna',code:'HP-BKK-002',as:'BKK01',due:'20 Jan',status:'Submitted',submittedAt:'Today 10:22'},
+  {survey:'ตรวจ Display REF',account:'PowerBuy',branch:'PowerBuy CentralWorld',code:'PB-BKK-001',as:'BKK01',due:'22 Jan',status:'Pending'},
+  {survey:'เช็ค Stock WM',account:'HomePro',branch:'HomePro Pinklao',code:'HP-BKK-003',as:'BKK01',due:'25 Jan',status:'Overdue'},
+  {survey:'ตรวจราคา Competitor AC',account:'HomePro',branch:'HomePro Ratchada',code:'HP-BKK-004',as:'BKK02',due:'20 Jan',status:'Pending'},
+  {survey:'ตรวจ Display REF',account:'PowerBuy',branch:'PowerBuy Rama 9',code:'PB-BKK-002',as:'BKK02',due:'22 Jan',status:'Submitted',submittedAt:'Yesterday 17:05'},
+  {survey:'ตรวจ POP ป้ายราคา REF',account:'HomePro',branch:'HomePro Ratchada',code:'HP-BKK-004',as:'BKK01',due:'18 Jan',status:'Submitted',submittedAt:'Yesterday 16:40'},
+  {survey:'ตรวจ POP ป้ายราคา REF',account:'PowerBuy',branch:'PowerBuy Rama 9',code:'PB-BKK-002',as:'BKK02',due:'18 Jan',status:'Submitted',submittedAt:'Yesterday 17:05'}
+];
+let activeASTask = asTasks[0];
+function badgeClass(status){return status==='Overdue'?'warn':status==='New'?'green':status==='Submitted'?'green':''}
+const surveyPalette=['#38bdf8','#a78bfa','#f97316','#14b8a6','#ec4899','#eab308','#6366f1','#06b6d4'];
+function getSurveyColor(index,isCompleted,hasOverdue){
+  if(isCompleted) return '#22c55e';
+  if(hasOverdue) return '#f59e0b';
+  return surveyPalette[index % surveyPalette.length];
+}
+function getSurveyIndex(survey){return [...new Set(asTasks.map(t=>t.survey))].indexOf(survey)}
+function renderSurveyCard(survey,tasks,isCompleted,index){
+  const pending=tasks.filter(t=>t.status!=='Submitted').length, completed=tasks.length-pending, overdue=tasks.filter(t=>t.status==='Overdue').length;
+  const pct=Math.round(completed/tasks.length*100);
+  const dueLabel=[...new Set(tasks.map(t=>t.due))].join(', ');
+  const accent=getSurveyColor(index,isCompleted,overdue>0);
+  const stateClass=isCompleted?'completed':overdue?'overdue-card':'active-card';
+  const surveyLabel=isCompleted?'Completed':overdue?'Action needed':'Active survey';
+  return `<div class="survey-card ${stateClass}" data-survey-index="${index}" style="--accent:${accent};--accent-soft:${accent}22"><div class="survey-card-head"><div><div class="survey-title">${survey}</div><div class="deadline-strip">⏰ Deadline: ${dueLabel}</div><div class="survey-meta">${isCompleted?'ทำครบทุกสาขาแล้ว · อยู่ใน Completed':'ยังมีงานต้องตอบ'} · ${tasks.length} สาขา · ความคืบหน้า ${pct}%</div></div><div class="survey-stats"><span class="badge due-badge">Due ${dueLabel}</span><span class="badge ${isCompleted?'green':overdue?'warn':'purple'}">${surveyLabel}</span><span class="badge">Done ${completed}/${tasks.length}</span>${overdue?`<span class="badge warn">Overdue ${overdue}</span>`:''}</div></div>${tasks.map(t=>{const done=t.status==='Submitted';return `<div class="task-row ${done?'submitted':''}"><div><b>${t.branch}</b><br><small>${t.account} · ${t.code}</small></div><div class="task-actions"><span class="badge due-badge">ส่งภายใน ${t.due}</span><span class="badge ${badgeClass(t.status)}">${done?'Submitted':t.status}</span>${done?`<button class="btn small ghost" onclick="toast('เปิดดูคำตอบที่ส่งแล้ว: ${t.code}')">View submitted</button>`:`<button class="btn small primary" onclick="openASForm('${survey}', '${t.code}')">ตอบ</button>`}</div></div>`}).join('')}</div>`
+}
+function renderASTasks(){
+  const visibleTasks=asTasks.filter(t=>t.as===currentAS.code);
+  const pendingCount=visibleTasks.filter(t=>t.status!=='Submitted').length, completedCount=visibleTasks.filter(t=>t.status==='Submitted').length, overdueCount=visibleTasks.filter(t=>t.status==='Overdue').length;
+  $('#asPendingCount').textContent=pendingCount; $('#asCompletedCount').textContent=completedCount; $('#asOverdueCount').textContent=overdueCount;
+  $('#asTaskTitle').textContent=`My Tasks · AS ${currentAS.code}`;
+  $('#asTaskHint').textContent=`${currentAS.name} เห็นเฉพาะงานที่ assign ให้ AS ${currentAS.code} เท่านั้น`;
+  const bySurvey={}; visibleTasks.forEach(t=>{(bySurvey[t.survey] ||= []).push(t)});
+  const surveyOrder=Object.keys(bySurvey); const surveyIndex=Object.fromEntries(surveyOrder.map((survey,index)=>[survey,index]));
+  const active=[], completed=[]; Object.entries(bySurvey).forEach(([survey,tasks])=>{(tasks.every(t=>t.status==='Submitted')?completed:active).push([survey,tasks])});
+  $('#asTaskList').innerHTML=[...active.map(([s,t])=>renderSurveyCard(s,t,false,surveyIndex[s])), completed.length?`<div class="completed-divider">Completed surveys</div>`:'', ...completed.map(([s,t])=>renderSurveyCard(s,t,true,surveyIndex[s]))].join('') || '<div class="hint">ไม่มีงานค้าง</div>';
+}
+function openASForm(survey, code){
+  activeASTask=asTasks.find(t=>t.survey===survey && t.code===code && t.as===currentAS.code) || asTasks.find(t=>t.as===currentAS.code);
+  const surveyTasks=asTasks.filter(t=>t.survey===activeASTask.survey && t.as===currentAS.code);
+  const isCompleted=surveyTasks.length && surveyTasks.every(t=>t.status==='Submitted');
+  const hasOverdue=surveyTasks.some(t=>t.status==='Overdue');
+  const accent=getSurveyColor(Math.max(getSurveyIndex(activeASTask.survey),0),isCompleted,hasOverdue);
+  const panel=$('#asFormPanel');
+  panel.style.setProperty('--accent',accent); panel.style.setProperty('--accent-soft',accent+'22');
+  $$('.as-question').forEach((q,idx)=>{const c=surveyPalette[(Math.max(getSurveyIndex(activeASTask.survey),0)+idx+1)%surveyPalette.length]; q.style.setProperty('--q-accent',c); q.style.setProperty('--q-soft',c+'1f')});
+  $('#asFormTitle').textContent='ตอบ Survey: '+activeASTask.survey;
+  $('#asFormMeta').textContent=`${activeASTask.account} · ${activeASTask.branch} · ${activeASTask.code} · AS ${activeASTask.as} · Due ${activeASTask.due}`;
+  goto('as-form')
+}
+function loginAS(){
+  const code=$('#asLoginCode').value.trim().toUpperCase(), pin=$('#asLoginPin').value.trim();
+  const user=asUsers.find(u=>u.code===code && u.pin===pin);
+  if(!user){toast('Login ไม่สำเร็จ: AS Code หรือ PIN ไม่ถูกต้อง'); return}
+  currentAS=user; renderASTasks(); toast(`Login สำเร็จ: ${user.code} · ${user.name}`); goto('as-tasks');
+}
+function renderProgress(){
+  const active = surveys.filter(s=>s.status!=='Deleted');
+  $('#dashActive').textContent=active.length;
+  $('#dashPending').textContent=active.reduce((sum,s)=>sum+s.pending,0);
+  const avg = active.length ? Math.round(active.reduce((sum,s)=>sum+(s.submitted/s.assigned*100),0)/active.length) : 0;
+  $('#dashAvg').textContent=avg+'%';
+  $('#surveyProgressRows').innerHTML=active.map(s=>{const pct=Math.round(s.submitted/s.assigned*100);return `<tr><td><b>${s.title}</b><br><span style="color:var(--muted)">Last update: today</span></td><td>${s.due}</td><td>${s.assigned}</td><td>${s.submitted}</td><td>${s.pending}</td><td><div class="progressbar"><div style="width:${pct}%"></div></div><span class="hint">${pct}%</span></td><td><span class="badge ${s.pending?'warn':'green'}">${s.pending?'Incomplete':'Complete'}</span></td><td><button class="btn small" onclick="viewSurvey(${s.id})">View detail</button> <button class="btn small danger" onclick="openDeleteModal(${s.id})">Delete</button></td></tr>`}).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">ไม่มี active survey</td></tr>`;
+  const cur = active.find(s=>s.id===activeSurveyId) || active[0];
+  if(!cur){$('#detailTitle').textContent='Survey Detail'; $('#detailRows').innerHTML=''; return}
+  activeSurveyId=cur.id; const pct=Math.round(cur.submitted/cur.assigned*100);
+  $('#detailTitle').textContent='Survey Detail: '+cur.title;
+  $('#detailBar').style.width=pct+'%';
+  $('#detailRows').innerHTML=`<tr><td>BKK01</td><td>Somchai</td><td>8</td><td>${cur.id===3?1:5}</td><td>${cur.id===3?7:3}</td><td>${cur.id===3?'12.5':'62.5'}%</td><td><span class="badge warn">Incomplete</span></td></tr><tr><td>BKK02</td><td>Narin</td><td>6</td><td>${cur.id===2?6:4}</td><td>${cur.id===2?0:2}</td><td>${cur.id===2?'100':'67'}%</td><td><span class="badge ${cur.id===2?'green':'warn'}">${cur.id===2?'Completed':'Incomplete'}</span></td></tr><tr><td>CEN01</td><td>May</td><td>5</td><td>2</td><td>3</td><td>40%</td><td><span class="badge warn">Incomplete</span></td></tr>`;
+}
+function viewSurvey(id){activeSurveyId=id; renderProgress(); toast('เปิด detail ของ survey แล้ว')}
+function openDeleteModal(id){pendingDeleteSurveyId=id; const s=surveys.find(x=>x.id===id); $('#deleteWarning').textContent=`Survey: ${s.title} · Assigned ${s.assigned} · Submitted ${s.submitted} · Pending ${s.pending}`; $('#deletePassword').value=''; $('#confirmDeleteBtn').disabled=true; $('#deleteModal').classList.add('show')}
+function closeDeleteModal(){$('#deleteModal').classList.remove('show'); pendingDeleteSurveyId=null}
+function confirmDeleteSurvey(){if(!$('#deletePassword').value.trim()){toast('ต้องใส่รหัสผ่าน admin ก่อนลบ'); return} const s=surveys.find(x=>x.id===pendingDeleteSurveyId); if(s){s.status='Deleted'; toast('ลบ/ซ่อน survey จาก dashboard แล้ว')} closeDeleteModal(); renderProgress()}
+function renderAll(){renderBranches();renderBasket();renderQuestions();renderProgress();renderASTasks()}
+function goto(id){$$('.screen').forEach(s=>s.classList.remove('active'));$('#'+id).classList.add('active');$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));const asMode=id.startsWith('as-');document.body.classList.toggle('as-mode',asMode);$('#topEyebrow').textContent=asMode?'AS Prototype':'MVP Prototype';$('#topTitle').textContent=asMode?'AS Survey Tasks':'สร้าง Survey: ตรวจราคา Competitor AC';$('#topDesc').textContent=asMode?'Task status: Pending / In progress / Submitted':`Due date: ${formatDeadline(currentDraftDeadline)} · Status: Draft`;$('#userLabel').textContent=asMode?`AS User · ${currentAS.code}`:'Super Admin · Armz';['select','review','questions'].forEach(x=>$('#step-'+x)?.classList.remove('active')); if(id==='select')$('#step-select').classList.add('active'); if(id==='review')$('#step-review').classList.add('active'); if(id==='questions')$('#step-questions').classList.add('active'); if(id==='progress')$('#step-publish').classList.add('active');}
+$$('[data-goto]').forEach(b=>b.onclick=()=>goto(b.dataset.goto)); $$('.nav button').forEach(b=>b.onclick=()=>goto(b.dataset.screen));
+['account','region','ascode','search'].forEach(id=>$('#'+id).addEventListener('input',renderBranches));
+$('#selectVisible').onclick=()=>{$$('.branchCheck').forEach(c=>c.checked=true)}; $('#clearVisible').onclick=()=>{$$('.branchCheck').forEach(c=>c.checked=false)}; $('#checkAll').onclick=e=>{$$('.branchCheck').forEach(c=>c.checked=e.target.checked)};
+$('#saveCurrent').onclick=()=>{let added=0, dup=0; $$('.branchCheck:checked').forEach(c=>{const b=branches.find(x=>x.id===+c.dataset.id); if(selected.has(b.id)) dup++; else {selected.set(b.id,b); added++;}}); renderAll(); toast(`บันทึกเพิ่ม ${added} สาขา${dup?` · ซ้ำ ${dup} สาขาไม่เพิ่ม`:''}`)};
+$('#clearBasket').onclick=()=>{selected.clear();renderAll();toast('ล้าง basket แล้ว')};
+$('#confirmBranches').onclick=()=>{if(!selected.size){toast('ต้องเลือกอย่างน้อย 1 สาขาก่อน');return} toast('ยืนยันสาขาแล้ว ไปหน้าตั้งคำถาม'); setTimeout(()=>goto('questions'),500)};
+$('#surveyDeadline').addEventListener('change',e=>updateDeadline(e.target.value));
+$('#addQuestion').onclick=()=>{questions.push({text:'คำถามใหม่',type:'short_text',required:true,allowPhoto:false,photoRequired:false,options:[]});renderQuestions();toast('เพิ่มคำถามแล้ว')}; $('#publishBtn').onclick=()=>{const label=formatDeadline(currentDraftDeadline); surveys[0].due=label; asTasks.filter(t=>t.survey==='ตรวจราคา Competitor AC').forEach(t=>t.due=label); renderProgress(); renderASTasks(); toast(`Published prototype: สร้าง task รายสาขาแล้ว · Deadline ${label}`); setTimeout(()=>goto('progress'),500)}; $('#asLoginBtn').onclick=loginAS; $('#asSubmitBtn').onclick=()=>{if(confirm('ยืนยันส่งคำตอบของสาขานี้?')){activeASTask.status='Submitted'; activeASTask.submittedAt='Just now'; renderASTasks(); toast('Submitted: task สาขานี้ถูกส่งแล้ว'); goto('as-tasks')}};
+// preselect sample
+[1,2,6,9,12].forEach(id=>selected.set(id,branches.find(b=>b.id===id))); renderAll(); updateDeadline(currentDraftDeadline);
+</script>
+</body>
+</html>
